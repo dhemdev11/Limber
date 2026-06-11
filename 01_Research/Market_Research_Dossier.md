@@ -11,6 +11,7 @@
 4. **Five global segments, not one** — optimizers/biohackers, worried-well aging, students, clinical/recovery, longevity enthusiasts — with very different WTP ($5 → $150/mo) and trust needs. **[M]**
 5. **Adherence is the make-or-break:** ~**70% abandon within 100 days**; the proven levers are progress you can see, ethical streaks (with forgiveness), implementation intentions, social/coaching, and meaning-tethered design. **[H]**
 6. **Reimbursement is a real-but-hard wedge:** Germany's **DiGA** (≈58 apps, insurer-reimbursed, mean €227/90-day course) solved the payer problem Pear Therapeutics died from; FDA De Novo (EndeavorRx) is a credibility asset but commercially brutal (Akili sold for ~$34M). **[H]**
+   - *In plain terms:* the strongest revenue model is getting an **insurer or health system — not the user — to pay** for the app as a covered treatment (that's *reimbursement*). Germany's **DiGA** program does exactly this: doctors prescribe approved apps and public insurers pay (~€227 per 90-day course) — solving the problem that **bankrupted Pear Therapeutics** (FDA-cleared but no one would pay). The US **FDA "De Novo"** route (a clearance for a brand-new device type, e.g. **EndeavorRx**, the first prescription video-game for ADHD) gives prestige but **doesn't guarantee payment** — its maker **Akili**, once ~$1B, sold for **~$34M**. *Takeaway:* pursue DiGA/clinical reimbursement as a **credibility play (v2), not near-term revenue.*
 
 ---
 

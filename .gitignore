@@ -5,3 +5,9 @@
 **/_qa*
 **/.~lock.*
 .DS_Store
+
+# Superseded India-version (Sukoon) files
+01_Research/Neuroplasticity_Research_and_Design_Layer.md
+09_Prototype/Sukoon_Interactive_Prototype.html
+10_Pitch_Deck/Sukoon_Pitch_Deck.*
+README_Sukoon_Capstone.md
