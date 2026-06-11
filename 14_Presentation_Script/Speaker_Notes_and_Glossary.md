@@ -35,7 +35,22 @@
 **Gloss:** "hard enough to grow, not so hard you quit."
 **Q&A depth:** consistent with *desirable-difficulty* research (Bjork; Kornell & Bjork 2008) — keeping accuracy around ~85% maximizes learning; too easy = no adaptation, too hard = disengagement. Limber's adaptive engine holds you there.
 
-## TAM / SAM / SOM (if the business slide is questioned)
-- **TAM** (Total Addressable Market) = everyone who could ever use it (~$58B).
-- **SAM** (Serviceable Available Market) = the slice we can realistically reach/serve (~$8.8B).
-- **SOM** (Serviceable Obtainable Market) = what we can actually capture near-term (~$103M Year-3 revenue).
+## TAM / SAM / SOM — market sizing (if the business slide is questioned)
+**Gloss (for the audience):** "biggest-possible market → the slice we can actually serve → what we'll realistically capture."
+
+**The three nested circles:**
+- **TAM** (Total Addressable Market) = everyone who could ever use it, if all paid — the theoretical ceiling. **~$58B.**
+- **SAM** (Serviceable Available Market) = the slice we can actually reach & who can pay (product, language, channel, income). **~$8.8B.**
+- **SOM** (Serviceable Obtainable Market) = what we can realistically capture near-term given competition/execution — *the number we plan against.* **~$103M Year-3 ARR** (inside the modelled 0.5–2% of SAM = $44–176M band).
+
+**The inputs behind the numbers (bottom-up = population × price):**
+- **Population:** ~**730M** cognitively-concerned, digitally-active adults (TAM) → narrowed to ~**110M** income-qualified, motivation-matched (SAM).
+- **Pricing (ARPU = Average Revenue Per User / yr):** ~**$80/yr** blended B2C; **$35–80 PEPM** for employers (*PEPM = Per Employee Per Month*, the standard enterprise-wellbeing price unit); **€200–500** per DTx course; **$500–2,500** per longevity-clinic user.
+- **Math:** 730M × ~$80 ≈ **$58B TAM**; 110M × ~$80 ≈ **$8.8B SAM**; 0.5–2% of SAM over yr 3–5 ≈ **$44–176M ARR (SOM)**.
+
+**Key terms / why it matters:**
+- **Bottom-up vs top-down:** *bottom-up* builds the number from our own units (population × price) — defensible; *top-down* takes a slice of an analyst's market figure — weaker. We use bottom-up as primary and cross-check against analyst reports. **Never plan off TAM** ("we just need 1%" is a red flag) — plan off **SOM**.
+- **ARR** = Annual Recurring Revenue (predictable yearly subscription revenue).
+- **[M]** confidence = Medium (reasoned estimates, not audited figures — deliberately humble).
+
+**One-liner if pressed:** "If everyone who cares about their brain and is online used Limber, that's ~$58B (TAM); the reachable, able-to-pay slice is ~$8.8B (SAM); capturing 0.5–2% of that over five years is ~$44–176M ARR (SOM) — and our model lands at ~$103M, right in that band."
