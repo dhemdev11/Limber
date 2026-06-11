@@ -1,0 +1,7 @@
+# Render artifacts / temp (sandbox-locked, not deliverables)
+**/slide-*.jpg
+**/s-*.jpg
+**/*.tmp
+**/_qa*
+**/.~lock.*
+.DS_Store

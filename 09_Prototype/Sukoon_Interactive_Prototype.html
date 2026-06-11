@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sukoon — Interactive Prototype</title>
+<style>
+  :root{
+    --bg:#F4F1EA; --ink:#243133; --muted:#6B7B7A; --card:#FFFFFF;
+    --sage:#7FA99B; --sage-d:#5E8576; --indigo:#3D405B; --accent:#E9A178;
+    --soft:#E7EDE9; --line:#DDE5E1; --warn:#C0584B; --ok:#5E8576;
+    --shadow:0 12px 30px rgba(36,49,51,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif;background:#E4E0D6;color:var(--ink);
+    display:flex;flex-wrap:wrap;gap:34px;justify-content:center;padding:34px 16px;line-height:1.5}
+  .head{width:100%;text-align:center;max-width:900px;margin:0 auto 4px}
+  .head h1{font-size:26px;color:var(--indigo);letter-spacing:.3px}
+  .head p{color:#55615f;font-size:14px;margin-top:6px}
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#55615f}
+  .legend span{background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  /* phone */
+  .phone{width:344px;height:744px;background:#0c0f10;border-radius:46px;padding:11px;box-shadow:var(--shadow);position:relative}
+  .screen{width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;position:relative}
+  .notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:26px;background:#0c0f10;border-radius:0 0 16px 16px;z-index:60}
+  .view{position:absolute;inset:0;display:none;flex-direction:column;animation:f .35s ease}
+  .view.active{display:flex}
+  @keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .top{padding:46px 22px 8px}
+  .body{flex:1;overflow-y:auto;padding:6px 22px 96px}
+  .greet{font-size:13px;color:var(--muted)}
+  .h2{font-size:23px;font-weight:700;color:var(--indigo);margin:2px 0 2px}
+  .sub{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:13px;box-shadow:0 4px 14px rgba(36,49,51,.04)}
+  .pill{display:inline-block;font-size:11px;color:var(--sage-d);background:var(--soft);border-radius:20px;padding:4px 11px;margin-bottom:8px;font-weight:600}
+  .btn{display:block;width:100%;border:none;border-radius:16px;padding:15px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--sage-d);color:#fff}
+  .btn-ghost{background:#fff;color:var(--indigo);border:1px solid var(--line)}
+  .btn-warm{background:var(--accent);color:#3a2417}
+  .choice{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:11px;cursor:pointer;transition:.15s}
+  .choice:active{transform:scale(.99)}
+  .choice .emo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:21px;flex-shrink:0}
+  .choice b{font-size:15px;color:var(--indigo)} .choice small{color:var(--muted);font-size:12px;display:block}
+  .nav{position:absolute;bottom:0;left:0;right:0;height:74px;background:#fffefb;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;padding-bottom:8px;z-index:40}
+  .nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#9aa6a3;cursor:pointer;font-family:inherit}
+  .nav button.on{color:var(--sage-d)}
+  .nav .ic{font-size:19px}
+  .ribbon{display:flex;gap:6px;margin:4px 0 14px}
+  .ribbon div{flex:1;text-align:center;font-size:10px;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 4px}
+  .ribbon div.cur{background:var(--sage-d);color:#fff;border-color:var(--sage-d)}
+  /* breathing */
+  .breathe-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+  .orb{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#9fc3b5,#5E8576);display:grid;place-items:center;color:#fff;font-size:16px;font-weight:600;animation:br 11s ease-in-out infinite;box-shadow:0 0 50px rgba(94,133,118,.45)}
+  @keyframes br{0%,100%{transform:scale(.72)}45%{transform:scale(1.08)}55%{transform:scale(1.08)}}
+  .shred-box{width:100%;min-height:150px;border:1px dashed var(--line);border-radius:16px;background:#fff;padding:14px;font-size:14px;color:var(--ink);resize:none;font-family:inherit;outline:none}
+  .shredding{animation:shred .9s forwards}
+  @keyframes shred{to{opacity:0;transform:translateY(30px) scale(.9) rotate(-2deg);filter:blur(4px)}}
+  .task-hero{background:linear-gradient(135deg,#5E8576,#3D405B);color:#fff;border-radius:22px;padding:22px;margin-bottom:14px}
+  .task-hero small{opacity:.8;font-size:12px} .task-hero h3{font-size:20px;margin-top:6px;font-weight:700}
+  .timer{font-size:46px;font-weight:700;text-align:center;color:var(--indigo);margin:18px 0;font-variant-numeric:tabular-nums}
+  .mini{font-size:12px;color:var(--muted)}
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+  .chip{font-size:12px;background:var(--soft);color:var(--sage-d);border-radius:16px;padding:7px 12px;cursor:pointer;border:1px solid transparent}
+  .chip.sel{background:var(--sage-d);color:#fff}
+  .milestone{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:10px}
+  .dot{width:34px;height:34px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--sage-d);font-size:16px}
+  .banner{background:#FBEDE9;border:1px solid #E8C8BF;border-radius:16px;padding:14px;font-size:13px;color:#7a3c33;margin-bottom:12px}
+  .safe{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:10px;font-size:13px}
+  .safe b{color:var(--indigo)}
+  .toggle{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;font-size:13px}
+  .sw{width:42px;height:24px;background:var(--sage-d);border-radius:20px;position:relative}
+  .sw::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;right:3px}
+  .note{font-size:11px;color:#9aa6a3;text-align:center;margin-top:8px}
+  .caption{width:344px;font-size:12px;color:#4d5957;text-align:center}
+  .caption b{color:var(--indigo)}
+  .disclosure{font-size:11px;color:var(--muted);text-align:center;padding:8px 16px;background:var(--soft);border-radius:12px;margin-top:10px}
+  .progress{height:6px;background:var(--soft);border-radius:6px;overflow:hidden;margin:14px 0}
+  .progress i{display:block;height:100%;background:var(--sage-d);width:30%;transition:.4s}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>Sukoon — Interactive Prototype</h1>
+  <p>Calm productivity for India · clickable demo · the <b>Regulate → Focus → Consolidate</b> loop. Tap through it.</p>
+  <div class="legend">
+    <span>📱 Mobile-first (Android/iOS)</span><span>🧠 Neuroplasticity-sequenced</span><span>🔒 Stigma-safe by design</span><span>🇮🇳 India-contextual</span>
+  </div>
+</div>
+
+<!-- ================= PHONE 1 : CORE LOOP ================= -->
+<div class="phone"><div class="screen"><div class="notch"></div>
+
+  <!-- HOME -->
+  <div class="view active" id="home">
+    <div class="top"><div class="greet">Shaam ho gayi, Aarav 🌇</div><div class="h2">How heavy is today?</div>
+      <div class="sub">No login, no streak to protect. Just tell me where you are.</div></div>
+    <div class="body">
+      <div class="ribbon"><div class="cur">1 · Regulate</div><div>2 · Focus</div><div>3 · Consolidate</div></div>
+      <div class="choice" onclick="go('focuspick')"><div class="emo" style="background:#E7EDE9">🍃</div><div><b>Light</b><small>I've got capacity — let's get a win</small></div></div>
+      <div class="choice" onclick="go('regulate')"><div class="emo" style="background:#F1E6DD">🌊</div><div><b>Heavy</b><small>My mind is racing — clear it first</small></div></div>
+      <div class="choice" onclick="go('survival')"><div class="emo" style="background:#F3E1DD">🫧</div><div><b>Survival</b><small>Burnt out — hide it all, just keep me going</small></div></div>
+      <div class="disclosure">Sukoon is a practice partner for everyday stress — not therapy or a licensed professional.</div>
+    </div>
+    <div class="nav">
+      <button class="on" onclick="go('home',this)"><span class="ic">🏠</span>Home</button>
+      <button onclick="go('regulate',this)"><span class="ic">🌊</span>Regulate</button>
+      <button onclick="go('focuspick',this)"><span class="ic">🎯</span>Focus</button>
+      <button onclick="go('consolidate',this)"><span class="ic">🌙</span>Reflect</button>
+      <button onclick="go('me',this)"><span class="ic">🔒</span>Me</button>
+    </div>
+  </div>
+
+  <!-- REGULATE: breathing -->
+  <div class="view" id="regulate">
+    <div class="top"><div class="ribbon" style="margin-top:34px"><div class="cur">1 · Regulate</div><div>2 · Focus</div><div>3 · Consolidate</div></div>
+      <div class="h2">Let's land first</div><div class="sub">A cyclic sigh — calm opens the door to focus.</div></div>
+    <div class="breathe-wrap">
+      <div class="pill">Stanford RCT 2023 · evidence-backed</div>
+      <div class="orb" id="orb">Breathe in…</div>
+      <button class="btn btn-ghost" style="width:auto;padding:10px 18px" onclick="go('vent')">Still racing? Brain-dump →</button>
+    </div>
+    <div class="body" style="flex:0;padding-bottom:20px"><button class="btn btn-primary" onclick="go('focuspick')">I feel lighter — continue</button></div>
+  </div>
+
+  <!-- VENT / SHRED -->
+  <div class="view" id="vent">
+    <div class="top"><div class="h2">Empty your head</div><div class="sub">Type the mess. It's private, encrypted, yours. Then shred it.</div></div>
+    <div class="body">
+      <textarea class="shred-box" id="ventText">I'm so stressed about placements and I haven't even made my resume and everyone seems ready and I can't focus…</textarea>
+      <button class="btn btn-warm" style="margin-top:12px" onclick="shred()">🗑️ Shred it — clean slate</button>
+      <div class="card" id="parsed" style="display:none;margin-top:14px">
+        <div class="pill">AI gently noticed</div>
+        <p style="font-size:14px">It sounds like you're carrying a lot. Want to keep just <b>one</b> low-pressure step?</p>
+        <button class="btn btn-primary" style="margin-top:12px" onclick="go('focus')">Add “Draft resume — 3 bullets”</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOCUS PICK -->
+  <div class="view" id="focuspick">
+    <div class="top"><div class="ribbon" style="margin-top:34px"><div>1 · Regulate</div><div class="cur">2 · Focus</div><div>3 · Consolidate</div></div>
+      <div class="h2">Your one thing</div><div class="sub">Everything else is hidden behind a swipe. Attention is the rewire.</div></div>
+    <div class="body">
+      <div class="task-hero"><small>WHEN-THEN · your habit anchor</small><h3>“After dinner, I draft my resume.”</h3></div>
+      <div class="card"><div class="pill">One important thing</div><p style="font-size:15px;font-weight:600">Draft resume — 3 bullets</p>
+        <p class="mini" style="margin-top:4px">+ 4 more, tucked away →</p></div>
+      <button class="btn btn-primary" onclick="go('focus')">Start a 10-min focus sprint</button>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="go('stuck')">I'm stuck…</button>
+    </div>
+  </div>
+
+  <!-- FOCUS SPRINT -->
+  <div class="view" id="focus">
+    <div class="top"><div class="h2">Focus sprint</div><div class="sub">Draft resume — 3 bullets</div></div>
+    <div class="body" style="display:flex;flex-direction:column;align-items:center">
+      <div class="timer" id="timer">10:00</div>
+      <div class="progress" style="width:100%"><i id="pbar"></i></div>
+      <button class="btn btn-primary" id="startBtn" onclick="runTimer()">Begin</button>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="go('consolidate')">Mark done ✓</button>
+      <div class="disclosure" style="margin-top:18px">Calm, single-task screen — no red badges, no overdue guilt.</div>
+    </div>
+  </div>
+
+  <!-- I'M STUCK -->
+  <div class="view" id="stuck">
+    <div class="top"><div class="h2">What's in the way?</div><div class="sub">A quick triage → a tiny technique.</div></div>
+    <div class="body">
+      <div class="choice" onclick="playbook('Swiss-cheese: do one 3-min piece to poke a hole in it.')"><div class="emo" style="background:#E7EDE9">🧀</div><div><b>It's too big</b><small>Swiss-cheese method</small></div></div>
+      <div class="choice" onclick="playbook('Fear-setting: write the worst case — it's usually survivable.')"><div class="emo" style="background:#F1E6DD">😨</div><div><b>I'm scared to fail</b><small>Fear-setting</small></div></div>
+      <div class="choice" onclick="playbook('Bare-Minimum mode: water, one urgent reply, rest. That counts.')"><div class="emo" style="background:#F3E1DD">😴</div><div><b>I'm just tired</b><small>Permission to rest</small></div></div>
+      <div class="card" id="pb" style="display:none"><div class="pill">Try this</div><p id="pbtext" style="font-size:14px"></p>
+        <button class="btn btn-primary" style="margin-top:12px" onclick="go('focus')">Okay, let's go</button></div>
+    </div>
+  </div>
+
+  <!-- SURVIVAL -->
+  <div class="view" id="survival">
+    <div class="top"><div class="h2">Today, rest is the win 🤍</div><div class="sub">Your to-do list is hidden. No guilt. Just three gentle things.</div></div>
+    <div class="body">
+      <div class="banner">We've tucked your tasks away until tomorrow. Being here is enough.</div>
+      <div class="milestone"><div class="dot">💧</div><div><b>Drink some water</b><div class="mini">30 seconds</div></div></div>
+      <div class="milestone"><div class="dot">✉️</div><div><b>Reply to the one urgent message</b><div class="mini">the rest can wait</div></div></div>
+      <div class="milestone"><div class="dot">🌙</div><div><b>Log off — really</b><div class="mini">sleep is repair</div></div></div>
+      <button class="btn btn-primary" onclick="go('consolidate')">That's enough for today</button>
+    </div>
+  </div>
+
+  <!-- CONSOLIDATE -->
+  <div class="view" id="consolidate">
+    <div class="top"><div class="ribbon" style="margin-top:34px"><div>1 · Regulate</div><div>2 · Focus</div><div class="cur">3 · Consolidate</div></div>
+      <div class="h2">Close the loop</div><div class="sub">Reflection (not rumination) + sleep is where it sticks.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">Event → Noticed → Choice</div>
+        <p class="mini" style="margin:8px 0 4px">One thing I noticed:</p>
+        <div class="chiprow"><span class="chip" onclick="sel(this)">Starting was the hardest part</span><span class="chip" onclick="sel(this)">I calmed down faster than I expected</span><span class="chip" onclick="sel(this)">Smaller felt doable</span></div>
+      </div>
+      <div class="safe"><b>🌙 Wind-down at 10:30pm</b><br><span class="mini">Sleep consolidates today's progress — we'll dim notifications.</span></div>
+      <button class="btn btn-primary" onclick="go('done')">Save my reflection</button>
+    </div>
+  </div>
+
+  <!-- DONE / MILESTONE -->
+  <div class="view" id="done">
+    <div class="top" style="padding-top:70px"><div class="h2" style="text-align:center">One calm win today 🌱</div>
+      <div class="sub" style="text-align:center">Consistency, gently — never a streak to lose.</div></div>
+    <div class="body">
+      <div class="milestone"><div class="dot">🌱</div><div><b>Calm wins this week: 4</b><div class="mini">growth, not pressure</div></div></div>
+      <div class="milestone"><div class="dot">🧠</div><div><b>You regulated before focusing 3×</b><div class="mini">that's the rewire working</div></div></div>
+      <div class="milestone"><div class="dot">🤍</div><div><b>You showed up on a hard day</b><div class="mini">that counts most</div></div></div>
+      <button class="btn btn-primary" onclick="go('home')">Back to home</button>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="go('me')">My privacy & support →</button>
+    </div>
+  </div>
+
+  <!-- ME / PRIVACY + SAFETY -->
+  <div class="view" id="me">
+    <div class="top"><div class="h2">You're in control</div><div class="sub">Private by design. Help when you need it.</div></div>
+    <div class="body">
+      <div class="toggle"><div><b>Stealth mode</b><div class="mini">Shows as a plain to-do app on your phone</div></div><div class="sw"></div></div>
+      <div class="toggle"><div><b>App lock (PIN)</b><div class="mini">For shared / family devices</div></div><div class="sw"></div></div>
+      <div class="toggle"><div><b>Employer sees only anonymised trends</b><div class="mini">Never your individual data — DPDP firewall</div></div><div class="sw"></div></div>
+      <div class="safe"><b>Need a real person?</b><br><span class="mini">Talk to a verified counsellor (₹499 text / ₹799 video) →</span></div>
+      <div class="safe" style="border-color:#E8C8BF;background:#FBEDE9"><b>In crisis?</b><br><span class="mini">KIRAN 1800-599-0019 · iCall 9152987821 · Vandrevala 1860-2662-345 — tap to call, anytime.</span></div>
+      <div class="note">Data encrypted · delete anytime · stored in India</div>
+    </div>
+  </div>
+
+  <div class="nav" style="display:none"></div>
+</div></div>
+
+<!-- ================= PHONE 2 : ONBOARDING + SAFETY ================= -->
+<div class="phone"><div class="screen"><div class="notch"></div>
+
+  <div class="view active" id="ob1">
+    <div class="top" style="padding-top:64px"><div class="h2">Namaste 🙏 Welcome to Sukoon</div><div class="sub">Calm first. Then the one thing that matters. Set up in 60 seconds.</div></div>
+    <div class="body">
+      <p class="mini" style="margin-bottom:8px">Choose your language</p>
+      <div class="chiprow"><span class="chip sel">हिन्दी</span><span class="chip">English</span><span class="chip">தமிழ்</span><span class="chip">తెలుగు</span><span class="chip">ಕನ್ನಡ</span></div>
+      <p class="mini" style="margin:14px 0 8px">What's weighing on you? (pick a few)</p>
+      <div class="chiprow"><span class="chip sel">Placement stress</span><span class="chip sel">Can't focus</span><span class="chip">Sleep</span><span class="chip">Family pressure</span><span class="chip">Burnout</span></div>
+      <button class="btn btn-primary" style="margin-top:18px" onclick="go('ob2')">Continue</button>
+      <div class="disclosure">We ask about <b>situations</b>, not feelings — easier to name, less stigma.</div>
+    </div>
+  </div>
+
+  <div class="view" id="ob2">
+    <div class="top" style="padding-top:64px"><div class="h2">A quick check-in</div><div class="sub">Two questions so we keep you safe and send you to the right help.</div></div>
+    <div class="body">
+      <div class="card"><p style="font-size:14px;font-weight:600">Over the last 2 weeks, how often have you felt down or had little interest?</p>
+        <div class="chiprow" style="margin-top:10px"><span class="chip" onclick="sel(this)">Not at all</span><span class="chip sel" onclick="sel(this)">Several days</span><span class="chip" onclick="screener(this)">Nearly every day</span></div>
+        <p class="mini">PHQ-2 / K-6 screener — Sukoon is for everyday stress, not clinical care.</p></div>
+      <div class="banner" id="handoff" style="display:none"><b>We want you to have real support.</b> This sounds heavier than self-help should carry alone — let's connect you to a counsellor and helplines, not an app exercise.</div>
+      <button class="btn btn-primary" onclick="go('ob3')">Continue</button>
+    </div>
+  </div>
+
+  <div class="view" id="ob3">
+    <div class="top" style="padding-top:64px"><div class="h2">Build your anchor</div><div class="sub">Habits stick when tied to something you already do.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">When-then · implementation intention</div>
+        <p style="font-size:15px;margin-top:6px"><b>When</b> I finish dinner,<br><b>then</b> I'll open Sukoon for 5 minutes.</p>
+        <div class="chiprow" style="margin-top:8px"><span class="chip">morning chai</span><span class="chip sel">after dinner</span><span class="chip">before bed</span></div></div>
+      <div class="disclosure">Evidence: implementation intentions reliably boost follow-through (Gollwitzer).</div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="go('ob4')">Set my anchor</button>
+    </div>
+  </div>
+
+  <div class="view" id="ob4">
+    <div class="top" style="padding-top:64px"><div class="h2">Private. Always.</div><div class="sub">Your mind, your data — locked to you.</div></div>
+    <div class="body">
+      <div class="toggle"><div><b>Stealth mode</b><div class="mini">Looks like a plain productivity app</div></div><div class="sw"></div></div>
+      <div class="toggle"><div><b>PIN lock</b><div class="mini">For shared devices</div></div><div class="sw"></div></div>
+      <div class="safe"><b>🔒 What we promise</b><br><span class="mini">Encrypted · stored in India · delete anytime · your employer never sees your individual data.</span></div>
+      <button class="btn btn-primary" onclick="alert('Setup complete — see the live loop on the left phone ☜')">Enter Sukoon</button>
+      <div class="disclosure">AI here is a practice partner, clearly labelled — never a therapist.</div>
+    </div>
+  </div>
+
+</div></div>
+
+<div class="caption">
+  <b>Left phone</b> — the daily loop: How-heavy gate → Regulate (breathing / brain-dump+shred) → Focus (one thing / I'm-stuck) → Survival mode → Consolidate → milestones → privacy &amp; safety.<br>
+  <b>Right phone</b> — onboarding: language-first, scenario goals, sub-clinical screener with warm handoff, when-then anchor, privacy setup.<br>
+  Every screen maps to a persona pain &amp; a cited design decision (see IA &amp; User Flows artefact).
+</div>
+
+<script>
+function go(id, el){
+  const phone = el ? el.closest('.screen') : document.getElementById(id).closest('.screen');
+  phone.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el && el.parentElement.classList.contains('nav')){
+    el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+    el.classList.add('on');
+  }
+  const b = document.getElementById(id).querySelector('.body'); if(b) b.scrollTop=0;
+}
+// breathing text cycle
+const orb=document.getElementById('orb');
+const phases=['Breathe in…','…and again','Long exhale…'];let pi=0;
+setInterval(()=>{if(orb){orb.textContent=phases[pi%phases.length];pi++;}},3700);
+// shred
+function shred(){
+  const t=document.getElementById('ventText');
+  t.classList.add('shredding');
+  setTimeout(()=>{t.style.display='none';document.getElementById('parsed').style.display='block';},900);
+}
+// stuck playbook
+function playbook(msg){document.getElementById('pb').style.display='block';document.getElementById('pbtext').textContent=msg;}
+// chips
+function sel(el){el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function screener(el){sel(el);document.getElementById('handoff').style.display='block';}
+// timer
+let tmr;
+function runTimer(){
+  let s=600;const t=document.getElementById('timer'),bar=document.getElementById('pbar'),btn=document.getElementById('startBtn');
+  btn.textContent='Focusing…';clearInterval(tmr);
+  tmr=setInterval(()=>{s--;let m=String(Math.floor(s/60)).padStart(2,'0'),ss=String(s%60).padStart(2,'0');
+    t.textContent=m+':'+ss;bar.style.width=(100-(s/600*100))+'%';
+    if(s<=0){clearInterval(tmr);go('consolidate');}},120); // sped up for demo
+}
+</script>
+</body>
+</html>

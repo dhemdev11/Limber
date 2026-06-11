@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limber — Interactive Prototype</title>
+<style>
+  :root{
+    --bg:#F5F3EF; --bg2:#EAE8E4; --card:#FFFFFF; --ink:#1A1A2E; --ink2:#4A4A6A;
+    --teal:#4A9B8E; --teal-d:#3B7E73; --sage:#6BAF7A; --terra:#C0614B; --amber:#D4A050;
+    --line:#E0DDD6; --soft:#EAF1EE; --shadow:0 14px 34px rgba(26,26,46,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:#DFDBD2;color:var(--ink);
+    display:flex;flex-wrap:wrap;gap:34px;justify-content:center;padding:34px 16px;line-height:1.55}
+  .head{width:100%;max-width:960px;text-align:center;margin:0 auto}
+  .head h1{font-size:27px;color:var(--ink);letter-spacing:-.3px}
+  .head .tag{color:var(--teal-d);font-weight:600;font-size:14px;margin-top:4px}
+  .head p{color:#5b5f6b;font-size:13.5px;margin-top:8px}
+  .legend{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:#5b5f6b}
+  .legend span{background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 12px}
+  .phone{width:346px;height:748px;background:#0c0f10;border-radius:46px;padding:11px;box-shadow:var(--shadow);position:relative}
+  .screen{width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;position:relative}
+  .notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:26px;background:#0c0f10;border-radius:0 0 16px 16px;z-index:60}
+  .view{position:absolute;inset:0;display:none;flex-direction:column;animation:f .35s ease}
+  .view.active{display:flex}
+  @keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .top{padding:48px 22px 6px}.body{flex:1;overflow-y:auto;padding:6px 22px 92px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--teal-d);text-transform:uppercase}
+  .h2{font-size:23px;font-weight:700;letter-spacing:-.3px;margin:3px 0 2px}
+  .sub{font-size:13px;color:var(--ink2);margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:13px;box-shadow:0 4px 16px rgba(26,26,46,.04)}
+  .pill{display:inline-block;font-size:11px;font-weight:600;color:var(--teal-d);background:var(--soft);border-radius:20px;padding:4px 11px;margin-bottom:8px}
+  .btn{display:block;width:100%;border:none;border-radius:15px;padding:15px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn:active{transform:scale(.98)}
+  .btn-p{background:var(--teal-d);color:#fff}.btn-g{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .ribbon{display:flex;gap:6px;margin:6px 0 14px}
+  .ribbon div{flex:1;text-align:center;font-size:10px;font-weight:600;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:11px;padding:8px 4px}
+  .ribbon div.cur{background:var(--teal-d);color:#fff;border-color:var(--teal-d)}
+  .nav{position:absolute;bottom:0;left:0;right:0;height:72px;background:#fffdf9;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;padding-bottom:8px;z-index:40}
+  .nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:#9aa2a0;cursor:pointer;font-family:inherit}
+  .nav button.on{color:var(--teal-d)}.nav .ic{font-size:18px}
+  .orb{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#7fc0b2,#3B7E73);display:grid;place-items:center;color:#fff;font-size:15px;font-weight:600;animation:br 11s ease-in-out infinite;box-shadow:0 0 50px rgba(59,126,115,.4)}
+  @keyframes br{0%,100%{transform:scale(.72)}45%,55%{transform:scale(1.07)}}
+  .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 22px}
+  .grid4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+  .tile{aspect-ratio:1;border-radius:18px;display:grid;place-items:center;font-size:34px;font-weight:700;color:#fff;cursor:pointer;transition:.12s;user-select:none}
+  .tile:active{transform:scale(.95)}
+  .meter{height:12px;background:var(--bg2);border-radius:8px;position:relative;margin:8px 0;overflow:hidden}
+  .meter i{position:absolute;height:100%;border-radius:8px;transition:.4s}
+  .zonebar{display:flex;height:30px;border-radius:10px;overflow:hidden;font-size:9px;font-weight:700;color:#fff;margin:6px 0}
+  .zonebar div{display:grid;place-items:center}
+  .stat{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .stat b{color:var(--teal-d)}
+  .lever{display:flex;align-items:center;gap:13px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px}
+  .lever .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+  .lever b{font-size:14px}.lever small{color:var(--ink2);font-size:12px;display:block}
+  .grade{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;color:#fff}
+  .chip{display:inline-block;font-size:12px;background:var(--soft);color:var(--teal-d);border-radius:16px;padding:7px 12px;margin:3px 4px 3px 0;cursor:pointer;border:1px solid transparent}
+  .chip.sel{background:var(--teal-d);color:#fff}
+  .disc{font-size:11px;color:var(--ink2);background:var(--soft);border-radius:12px;padding:10px 12px;margin-top:10px}
+  .caption{width:346px;font-size:12px;color:#4d5048;text-align:center}.caption b{color:var(--ink)}
+  .radar-lbl{font-size:9px;fill:var(--ink2)}
+  .toggle{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-top:11px;font-size:13px}
+  .toggle b{font-size:13px}.toggle small{color:var(--ink2);font-size:11.5px;display:block}
+  .sw{width:42px;height:24px;background:#c9cfca;border-radius:20px;position:relative;cursor:pointer;flex-shrink:0;transition:.2s}
+  .sw::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .sw.on{background:var(--teal-d)}.sw.on::after{left:21px}
+  /* edge-state: evening/sleep theme on Consolidate */
+  #consolidate.sleep{background:#11151C}
+  #consolidate.sleep .h2,#consolidate.sleep .eyebrow{color:#CFE0DB}
+  #consolidate.sleep .sub,#consolidate.sleep .mini{color:#8aa0a8}
+  #consolidate.sleep .card,#consolidate.sleep .lever{background:#1b2128;border-color:#2a323b;color:#E8E6E0}
+  /* accessibility classes (applied to body) */
+  body.contrast{--ink:#000;--ink2:#222;--line:#888}
+  body.dyslexia *{font-family:'Comic Sans MS','OpenDyslexic',sans-serif !important;letter-spacing:.03em}
+  body.reduce *{animation:none !important;transition:none !important}
+</style></head>
+<body>
+<div class="head">
+  <h1>Limber — Interactive Prototype</h1>
+  <div class="tag">The science of a more adaptable mind</div>
+  <p>Clickable demo · the neuroplasticity loop: <b>Prime → Train → Consolidate</b>. Try the adaptive task on the left phone.</p>
+  <div class="legend"><span>🌍 Global · WCAG 2.2 AA</span><span>🧠 Neuroplasticity-core</span><span>📊 Honest, personal-baseline progress</span><span>🔬 Evidence-first</span></div>
+</div>
+
+<!-- PHONE 1: DAILY LOOP -->
+<div class="phone"><div class="screen"><div class="notch"></div>
+
+  <!-- TODAY -->
+  <div class="view active" id="today">
+    <div class="top"><div class="eyebrow">Today</div><div class="h2">One focused session</div>
+      <div class="sub">Goal: <b>Sharper focus at work</b> · your tether keeps it meaningful.</div></div>
+    <div class="body">
+      <div class="ribbon"><div class="cur">1 · Prime</div><div>2 · Train</div><div>3 · Consolidate</div></div>
+      <div class="card"><div class="pill" id="prioPill">Your priority signal</div>
+        <p style="font-size:14px" id="prioText">Recovery looks good today — a full session is a great use of your window.</p></div>
+      <div class="card"><div class="stat"><span>Attention (vs your baseline)</span><b>+9%</b></div>
+        <div class="stat"><span>This week</span><b>5 of 7 days</b></div>
+        <div class="stat" style="border:none"><span>Sessions in the challenge zone</span><b>82%</b></div></div>
+      <button class="btn btn-p" id="todayCta" onclick="go('prime')">Begin today's session</button>
+      <div class="toggle"><div><b>Demo: poor-recovery day</b><small>See how Today adapts to your wearable</small></div><div class="sw" id="swRecovery" onclick="togglePoorRecovery()"></div></div>
+      <div class="disc">Limber trains the skills you practice. It won't raise your IQ or "rewire your brain in 21 days" — and we'll always show you the evidence.</div>
+    </div>
+    <div class="nav">
+      <button class="on" onclick="go('today',this)"><span class="ic">◎</span>Today</button>
+      <button onclick="go('progress',this)"><span class="ic">📈</span>Progress</button>
+      <button onclick="go('levers',this)"><span class="ic">🫀</span>Levers</button>
+      <button onclick="go('me',this)"><span class="ic">⚙︎</span>Me</button>
+    </div>
+  </div>
+
+  <!-- PRIME -->
+  <div class="view" id="prime">
+    <div class="top"><div class="ribbon" style="margin-top:34px"><div class="cur">1 · Prime</div><div>2 · Train</div><div>3 · Consolidate</div></div>
+      <div class="h2">Prime your focus</div><div class="sub">Calm, attended states open the plasticity window.</div></div>
+    <div class="center">
+      <div class="pill">Regulate → attention · evidence [Strong]</div>
+      <div class="orb" id="orb">Breathe in…</div>
+      <p style="font-size:13px;color:var(--ink2);text-align:center">Remember your why: <b>“Sharper focus at work.”</b></p>
+    </div>
+    <div class="body" style="flex:0;padding-bottom:18px"><button class="btn btn-p" onclick="go('train')">I'm ready — train</button></div>
+  </div>
+
+  <!-- TRAIN (interactive adaptive task) -->
+  <div class="view" id="train">
+    <div class="top"><div class="eyebrow">Train · Working memory</div><div class="h2" id="trainTitle">Match the symbol</div>
+      <div class="sub">Tap the tile that matches the target. Difficulty adapts to keep you in the zone.</div></div>
+    <div class="body">
+      <div class="zonebar"><div style="flex:2;background:#9aa2a0">Rest</div><div id="zChal" style="flex:3;background:var(--sage)">Challenge zone ~85%</div><div style="flex:2;background:var(--terra)">Overdrive</div></div>
+      <div class="stat"><span>Accuracy</span><b id="acc">—</b></div>
+      <div class="stat" style="border:none"><span>Level</span><b id="lvl">3</b></div>
+      <div class="card" style="text-align:center"><div class="pill">Target</div>
+        <div id="target" style="font-size:46px;font-weight:800;color:var(--teal-d)">◆</div></div>
+      <div class="grid4" id="tiles"></div>
+      <div id="trainDone" style="display:none">
+        <button class="btn btn-p" onclick="go('consolidate')">Finish & consolidate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSOLIDATE -->
+  <div class="view" id="consolidate">
+    <div class="top"><div class="ribbon" style="margin-top:34px"><div>1 · Prime</div><div>2 · Train</div><div class="cur">3 · Consolidate</div></div>
+      <div class="h2">Lock it in</div><div class="sub">Reflection + spacing + sleep are where change consolidates.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">Close the loop</div>
+        <p style="font-size:13px;margin-bottom:8px">One thing that felt different today:</p>
+        <div><span class="chip" onclick="sel(this)">Held focus longer</span><span class="chip" onclick="sel(this)">Faster under pressure</span><span class="chip" onclick="sel(this)">Still warming up</span></div></div>
+      <div class="lever"><div class="ic" style="background:var(--soft)">🔁</div><div><b>Spaced review scheduled</b><small>Next: in 2 days — when memory benefits most</small></div></div>
+      <div class="lever"><div class="ic" style="background:var(--soft)">🌙</div><div><b>Sleep tonight = consolidation</b><small>We'll dim notifications after 9:30pm</small></div></div>
+      <div class="toggle"><div><b>Demo: after 9:30pm</b><small>Evening wind-down theme + dimmed UI</small></div><div class="sw" id="swSleep" onclick="toggleSleep()"></div></div>
+      <button class="btn btn-p" onclick="go('progress')">See my progress</button>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="view" id="progress">
+    <div class="top"><div class="eyebrow">Progress</div><div class="h2">Vs your own baseline</div>
+      <div class="sub">No leaderboards. Just you, honestly measured.</div></div>
+    <div class="body">
+      <div class="card" style="text-align:center"><div class="pill">Cognitive domains · 30-day trend</div>
+        <svg viewBox="0 0 200 180" width="100%" height="180" id="radar"></svg>
+        <p style="font-size:11px;color:var(--ink2)">Inner = Week 1 baseline · Outer = now</p></div>
+      <div class="card"><div class="stat"><span>Attention speed</span><b>+12% vs baseline</b></div>
+        <div class="stat"><span>Working memory</span><b>+8%</b></div>
+        <div class="stat" style="border:none"><span>Re-assessment</span><b>in 9 days</b></div></div>
+      <div class="disc">“+12% faster than your Week-1 baseline” — a measured near-transfer gain on the skill you trained. We don't claim this makes you smarter overall.</div>
+    </div>
+    <div class="nav">
+      <button onclick="go('today',this)"><span class="ic">◎</span>Today</button>
+      <button class="on" onclick="go('progress',this)"><span class="ic">📈</span>Progress</button>
+      <button onclick="go('levers',this)"><span class="ic">🫀</span>Levers</button>
+      <button onclick="go('me',this)"><span class="ic">⚙︎</span>Me</button>
+    </div>
+  </div>
+
+  <!-- LEVERS -->
+  <div class="view" id="levers">
+    <div class="top"><div class="eyebrow">Lifestyle levers</div><div class="h2">What gates plasticity</div>
+      <div class="sub">Training sits on top of these. They're part of the product, not add-ons.</div></div>
+    <div class="body">
+      <div class="lever"><div class="ic" style="background:#E7F0EC">🏃</div><div><b>Move — 30 min aerobic</b><small>Raises BDNF, lowers the LTP threshold</small></div><span class="grade" style="background:var(--sage)">Strong</span></div>
+      <div class="lever"><div class="ic" style="background:#E7F0EC">😴</div><div><b>Sleep — 7–9 h</b><small>Consolidates the day's practice</small></div><span class="grade" style="background:var(--sage)">Strong</span></div>
+      <div class="lever"><div class="ic" style="background:#E7F0EC">🧘</div><div><b>Regulate stress</b><small>Chronic cortisol closes the window</small></div><span class="grade" style="background:var(--sage)">Strong</span></div>
+      <div class="lever"><div class="ic" style="background:#F3EADF">✨</div><div><b>Seek novelty</b><small>Dopamine primes encoding</small></div><span class="grade" style="background:var(--amber)">Strong*</span></div>
+    </div>
+    <div class="nav">
+      <button onclick="go('today',this)"><span class="ic">◎</span>Today</button>
+      <button onclick="go('progress',this)"><span class="ic">📈</span>Progress</button>
+      <button class="on" onclick="go('levers',this)"><span class="ic">🫀</span>Levers</button>
+      <button onclick="go('me',this)"><span class="ic">⚙︎</span>Me</button>
+    </div>
+  </div>
+
+  <!-- ME -->
+  <div class="view" id="me">
+    <div class="top"><div class="eyebrow">You</div><div class="h2">Yours, integrated, accessible</div></div>
+    <div class="body">
+      <div class="lever"><div class="ic" style="background:var(--soft)">⌚</div><div><b>Connected: Oura, Apple Health</b><small>Recovery informs your session load</small></div></div>
+      <div class="lever"><div class="ic" style="background:var(--soft)">🔬</div><div><b>Evidence library</b><small>What the science shows — and doesn't</small></div></div>
+      <div class="lever"><div class="ic" style="background:var(--soft)">♿</div><div><b>Accessibility — try them live</b><small>These actually re-render the prototype</small></div></div>
+      <div class="toggle"><div><b>Dyslexia-friendly font</b></div><div class="sw" id="swDys" onclick="toggleBody('dyslexia',this)"></div></div>
+      <div class="toggle"><div><b>High contrast</b></div><div class="sw" id="swCon" onclick="toggleBody('contrast',this)"></div></div>
+      <div class="toggle"><div><b>Reduced motion</b></div><div class="sw" id="swMot" onclick="toggleBody('reduce',this)"></div></div>
+      <div class="lever" style="margin-top:11px"><div class="ic" style="background:var(--soft)">🔒</div><div><b>Privacy (GDPR Art. 9 · HIPAA on B2B)</b><small>Explicit consent · data residency · export or delete anytime</small></div></div>
+    </div>
+    <div class="nav">
+      <button onclick="go('today',this)"><span class="ic">◎</span>Today</button>
+      <button onclick="go('progress',this)"><span class="ic">📈</span>Progress</button>
+      <button onclick="go('levers',this)"><span class="ic">🫀</span>Levers</button>
+      <button class="on" onclick="go('me',this)"><span class="ic">⚙︎</span>Me</button>
+    </div>
+  </div>
+</div></div>
+
+<!-- PHONE 2: ONBOARDING + EVIDENCE -->
+<div class="phone"><div class="screen"><div class="notch"></div>
+  <div class="view active" id="ob1">
+    <div class="top" style="padding-top:60px"><div class="h2">Welcome to Limber</div><div class="sub">Let's measure where you are — before you sign up.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">Value before signup</div>
+        <p style="font-size:13px">A 60-second baseline tells us your starting point and personalizes your training. No account needed yet.</p></div>
+      <button class="btn btn-p" onclick="go('ob2')">Start my baseline</button>
+      <div class="disc">We benchmark you against <b>your own</b> baseline — never against other people.</div>
+    </div>
+  </div>
+  <div class="view" id="ob2">
+    <div class="top" style="padding-top:60px"><div class="h2">Quick baseline</div><div class="sub">Tap the moment you see the dot turn teal. (Reaction speed)</div></div>
+    <div class="center">
+      <div id="rt" style="width:150px;height:150px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;font-size:14px;color:var(--ink2);cursor:pointer" onclick="rtTap()">Wait…</div>
+      <p id="rtres" style="font-size:13px;color:var(--ink2)"></p>
+    </div>
+    <div class="body" style="flex:0;padding-bottom:18px"><button class="btn btn-g" onclick="go('ob3')">Continue</button></div>
+  </div>
+  <div class="view" id="ob3">
+    <div class="top" style="padding-top:60px"><div class="h2">Your starting point</div><div class="sub">An honest snapshot — your training adapts from here.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">Baseline captured</div>
+        <div class="stat"><span>Reaction speed</span><b>Above average for your age</b></div>
+        <div class="stat"><span>Attention</span><b>Room to grow</b></div>
+        <div class="stat" style="border:none"><span>Recommended focus</span><b>Working memory</b></div></div>
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:8px">What's your one goal?</p>
+      <div><span class="chip sel">Sharper focus</span><span class="chip">Better memory</span><span class="chip">Calmer mind</span><span class="chip">Cognitive longevity</span><span class="chip">Recover my edge</span></div>
+      <button class="btn btn-p" style="margin-top:14px" onclick="go('ob4')">Set my goal</button>
+    </div>
+  </div>
+  <div class="view" id="ob4">
+    <div class="top" style="padding-top:60px"><div class="h2">Make it stick</div><div class="sub">Tie the habit to something you already do.</div></div>
+    <div class="body">
+      <div class="card"><div class="pill">When-then · evidence [Strong]</div>
+        <p style="font-size:15px;margin-top:6px"><b>When</b> I finish my morning coffee, <b>then</b> I'll do one Limber session.</p>
+        <div style="margin-top:8px"><span class="chip">after coffee</span><span class="chip sel">after lunch</span><span class="chip">before bed</span></div></div>
+      <button class="btn btn-p" onclick="go('ev')">Create my plan</button>
+      <div class="disc">Implementation intentions make people ~3× more likely to keep a new habit.</div>
+    </div>
+  </div>
+  <div class="view" id="ev">
+    <div class="top" style="padding-top:60px"><div class="eyebrow">Evidence library</div><div class="h2">What the science shows</div>
+      <div class="sub">The honest part most apps skip.</div></div>
+    <div class="body">
+      <div class="lever"><div class="ic" style="background:#E7F0EC">✓</div><div><b>Adaptive practice improves the trained skill</b><small>Near-transfer is well-supported</small></div><span class="grade" style="background:var(--sage)">Strong</span></div>
+      <div class="lever"><div class="ic" style="background:#E7F0EC">✓</div><div><b>Exercise &amp; sleep support brain health</b><small>BDNF, consolidation</small></div><span class="grade" style="background:var(--sage)">Strong</span></div>
+      <div class="lever"><div class="ic" style="background:#FBEEE9">✕</div><div><b>"Raises your IQ / general intelligence"</b><small>Far-transfer is null — we won't claim it</small></div><span class="grade" style="background:var(--terra)">Not claimed</span></div>
+      <div class="lever"><div class="ic" style="background:#FBEEE9">✕</div><div><b>"Rewires your brain in 21 days"</b><small>Structural change takes months — myth</small></div><span class="grade" style="background:var(--terra)">Not claimed</span></div>
+      <div class="disc">Lumosity paid a $2M FTC fine for overclaiming. Being honest is our whole point.</div>
+    </div>
+  </div>
+</div></div>
+
+<div class="caption">
+  <b>Left phone</b> — the daily loop: Today → Prime (regulate/attention) → <b>Train</b> (a real adaptive task that keeps you in the ~85% challenge zone) → Consolidate (reflect + spacing + sleep) → Progress (personal-baseline radar) → Levers → Me.<br>
+  <b>Right phone</b> — onboarding: a live baseline reaction task → honest snapshot → goal tether → implementation intention → the evidence library (what we will and won't claim).
+</div>
+
+<script>
+function go(id, el){
+  const phone = (el?el:document.getElementById(id)).closest('.screen');
+  phone.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(el && el.parentElement.classList.contains('nav')){el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+  const b=document.getElementById(id).querySelector('.body'); if(b)b.scrollTop=0;
+  if(id==='progress') drawRadar();
+}
+function sel(el){el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+// edge-state demos
+function togglePoorRecovery(){
+  const on=document.getElementById('swRecovery').classList.toggle('on');
+  const t=document.getElementById('prioText'),c=document.getElementById('todayCta'),p=document.getElementById('prioPill');
+  if(on){p.textContent='Recovery is low today';t.textContent="Your wearable shows poor recovery — a lighter session protects your gains today.";c.textContent='Start a lighter session';}
+  else{p.textContent='Your priority signal';t.textContent='Recovery looks good today — a full session is a great use of your window.';c.textContent="Begin today's session";}
+}
+function toggleSleep(){const on=document.getElementById('swSleep').classList.toggle('on');document.getElementById('consolidate').classList.toggle('sleep',on);}
+function toggleBody(cls,el){const on=document.body.classList.toggle(cls);el.classList.toggle('on',on);}
+// breathing
+const orb=document.getElementById('orb');const ph=['Breathe in…','Hold…','Long exhale…'];let pi=0;
+setInterval(()=>{if(orb)orb.textContent=ph[pi++%3];},3700);
+// adaptive train task
+const SYM=['◆','●','▲','■','★','✦','⬟','◗'];
+let level=3, hits=0, trials=0;
+function newTrial(){
+  const n=Math.min(2+level,8);
+  const pool=SYM.slice(0,n);
+  const target=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('target').textContent=target;
+  const tiles=document.getElementById('tiles'); tiles.innerHTML='';
+  const opts=[...pool].sort(()=>Math.random()-.5).slice(0,4);
+  if(!opts.includes(target)) opts[0]=target;
+  opts.sort(()=>Math.random()-.5);
+  const cols=['#4A9B8E','#6BAF7A','#5B7DB1','#C99A4E']; // no red — design principle (red triggers stress)
+  opts.forEach((s,i)=>{const t=document.createElement('div');t.className='tile';t.textContent=s;t.style.background=cols[i%4];
+    t.onclick=()=>answer(s===target);tiles.appendChild(t);});
+}
+function answer(ok){
+  trials++; if(ok)hits++;
+  if(ok && Math.random()>.3) level=Math.min(level+1,7);
+  if(!ok) level=Math.max(level-1,1);
+  const acc=Math.round(hits/trials*100);
+  document.getElementById('acc').textContent=acc+'%';
+  document.getElementById('lvl').textContent=level;
+  // move zone marker color feel
+  if(trials>=8){document.getElementById('trainTitle').textContent='Nice work — in the zone';document.getElementById('tiles').innerHTML='';
+    document.getElementById('target').textContent='✓';document.getElementById('trainDone').style.display='block';return;}
+  newTrial();
+}
+// init train when shown first time
+document.addEventListener('click',function init(e){
+  if(e.target.textContent==="I'm ready — train" || (e.target.closest&&e.target.closest('#train'))){
+    if(trials===0 && document.getElementById('tiles').children.length===0) newTrial();
+  }
+},true);
+// reaction-time baseline
+let rtState='wait',rtStart=0;
+function rtArm(){const d=document.getElementById('rt');d.style.background='var(--bg2)';d.textContent='Wait…';rtState='wait';
+  setTimeout(()=>{d.style.background='var(--teal-d)';d.style.color='#fff';d.textContent='TAP!';rtState='go';rtStart=Date.now();},1200+Math.random()*1500);}
+function rtTap(){const d=document.getElementById('rt');
+  if(rtState==='go'){const ms=Date.now()-rtStart;document.getElementById('rtres').textContent='Reaction: '+ms+' ms — nice.';d.textContent=ms+'ms';d.style.background='var(--sage)';rtState='done';}
+  else if(rtState==='wait'){d.textContent='Too soon!';}}
+// arm RT when ob2 opens
+const obBtn=[...document.querySelectorAll('button')].find(b=>b.textContent==='Start my baseline');
+if(obBtn)obBtn.addEventListener('click',()=>setTimeout(rtArm,200));
+// radar chart
+function drawRadar(){
+  const svg=document.getElementById('radar'); if(!svg||svg.dataset.done)return; svg.dataset.done='1';
+  const cx=100,cy=88,R=62; const axes=['Attention','Memory','Speed','Flexibility','Focus'];
+  const base=[.45,.4,.6,.5,.45], now=[.78,.62,.72,.66,.8];
+  function pts(arr){return arr.map((v,i)=>{const a=-Math.PI/2+i*2*Math.PI/arr.length;return [cx+Math.cos(a)*R*v,cy+Math.sin(a)*R*v];});}
+  let g='';
+  [1,.66,.33].forEach(r=>{let p=pts(axes.map(()=>r)).map(x=>x.join(',')).join(' ');g+=`<polygon points="${p}" fill="none" stroke="#E0DDD6"/>`;});
+  axes.forEach((lab,i)=>{const a=-Math.PI/2+i*2*Math.PI/axes.length;const x=cx+Math.cos(a)*(R+12),y=cy+Math.sin(a)*(R+10);
+    g+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*R}" y2="${cy+Math.sin(a)*R}" stroke="#E0DDD6"/>`;
+    g+=`<text class="radar-lbl" x="${x}" y="${y}" text-anchor="middle">${lab}</text>`;});
+  g+=`<polygon points="${pts(base).map(x=>x.join(',')).join(' ')}" fill="#9aa2a0" fill-opacity=".25" stroke="#9aa2a0"/>`;
+  g+=`<polygon points="${pts(now).map(x=>x.join(',')).join(' ')}" fill="#4A9B8E" fill-opacity=".35" stroke="#3B7E73" stroke-width="2"/>`;
+  svg.innerHTML=g;
+}
+</script></body></html>
