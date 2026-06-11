@@ -15,6 +15,22 @@
 - **EndeavorRx / Akili** — EndeavorRx is the first **FDA-authorized video-game treatment** (kids' ADHD); its maker **Akili**, once valued near **$1B**, struggled commercially and **sold for ~$34M** — proof that FDA approval ≠ commercial success.
 - **Limber's stance:** pursue DiGA/clinical reimbursement in Europe as a **v2 credibility + trust move**, never as v1 revenue.
 
+## Project evolution: Sukoon → Limber (if asked "what about calm-productivity / your earlier idea?")
+**Gloss (for the audience):** "My first direction was a calm-productivity app for India; the global neuroplasticity research led me to pivot to Limber."
+
+**The "calm-productivity" thesis (the earlier Sukoon concept):** mental wellness and productivity shouldn't be two warring apps — you should **regulate your mind first, then do the one thing that matters.** Pure productivity apps pile on guilt (overdue tasks turn red → burnout); pure wellness apps relax you but leave your to-do list untouched. Sukoon's loop was **Regulate → Focus → Consolidate**, India-first, aimed at *calmer daily output.*
+
+**Why I pivoted to Limber:** going global and reading the neuroplasticity literature revealed a bigger, more defensible opportunity — a category huge but **poisoned by overclaiming** (Lumosity's FTC fine; far-transfer is null). The sharper wedge wasn't "calm productivity," it was **honesty**: train the brain the way it actually changes and refuse the claims the evidence won't support.
+
+| | **Sukoon** (earlier) | **Limber** (current) |
+|---|---|---|
+| Core idea | Calm your mind, then be productive | Train your brain the way it actually changes |
+| Scope | India-first | Global |
+| Loop | Regulate → Focus → Consolidate (*manage today's workload*) | Prime → Train → Consolidate (*build lasting cognitive capacity*) |
+| The wedge | Workload-aware wellness loop | Evidence-honesty as the moat |
+
+**How to field it confidently:** *"My first exploration was a calm-productivity hybrid for India. The global research led me to pivot — the bigger, more defensible opportunity was honesty in a category full of overclaiming. I followed the evidence rather than anchoring on my first idea."* (Pivoting *because of evidence* signals rigor, not indecision.)
+
 ## Moat
 **Gloss (for the audience):** "the one advantage a competitor can't copy."
 **Q&A depth:** a *moat* (Buffett's term) is a **durable competitive advantage** — brand/trust, network effects, switching costs, cost advantage, or proprietary tech/data. Limber's moat is **trust through evidence-honesty**: a rival can clone our features in a weekend, but they can't clone our honesty without giving up the overclaims their business depends on. The experts trust no app yet — whoever earns that trust first owns the position.
